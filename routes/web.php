@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -41,5 +42,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resources([
         'roles' => RoleController::class,
         'users' => UserController::class,
+        'categories' => CategoryController::class,
     ]);
 });

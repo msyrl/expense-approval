@@ -35,6 +35,7 @@ class PermissionsTableSeeder extends Seeder
         $menus = [
             'Roles',
             'Users',
+            'Categories',
         ];
 
         return collect($menus)
