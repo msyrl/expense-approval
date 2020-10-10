@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -43,5 +44,6 @@ Route::group(['middleware' => ['auth']], function () {
         'roles' => RoleController::class,
         'users' => UserController::class,
         'categories' => CategoryController::class,
+        'expenses' => ExpenseController::class,
     ]);
 });
