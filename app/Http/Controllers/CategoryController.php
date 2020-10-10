@@ -126,9 +126,17 @@ class CategoryController extends Controller
     {
         abort_if(Gate::denies('delete-categories'), 401);
 
-        $category->delete();
+        $error = false;
 
-        request()->session()->flash('alert-success', 'Success deleted the data.');
+        if ($category->expenses->count()) {
+            $error = true;
+            request()->session()->flash('alert-danger', 'Can\'t delete non-empty data.');
+        }
+
+        if (!$error) {
+            $category->delete();
+            request()->session()->flash('alert-success', 'Success deleted the data.');
+        }
 
         return back();
     }

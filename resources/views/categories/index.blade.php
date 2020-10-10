@@ -13,6 +13,11 @@
                             {!! session()->get('alert-success') !!}
                         </x-alert-success>
                     @endif
+                    @if (session()->has('alert-danger'))
+                        <x-alert-danger>
+                            {!! session()->get('alert-danger') !!}
+                        </x-alert-danger>
+                    @endif
                     <div class="row">
                         <div class="col-12">
                             <!-- Default box -->
