@@ -38,4 +38,12 @@ class ApprovalSetting extends Model
             )
             ->using(Guarantor::class);
     }
+
+    public function scopeWhereAmount($query, int $amount)
+    {
+        return $query
+            ->with(['guarantors'])
+            ->where('from_amount', '<=', $amount)
+            ->where('to_amount', '>=', $amount);
+    }
 }
