@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Approval;
+use App\Models\ApprovalSetting;
+use App\Models\Category;
+use App\Models\Expense;
+use App\Models\Guarantor;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\Role;
@@ -43,6 +48,11 @@ class DatabaseProductionSeeder extends Seeder
         User::truncate();
         Role::truncate();
         Permission::truncate();
+        Category::truncate();
+        Expense::truncate();
+        Guarantor::truncate();
+        ApprovalSetting::truncate();
+        Approval::truncate();
     }
 
     protected function createSuperAdminUser()
