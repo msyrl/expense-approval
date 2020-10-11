@@ -22,6 +22,27 @@
                                         <div class="text-muted">{{ $expense->description ?? '-' }}</div>
                                     </div>
                                     <div class="mb-3">
+                                        <strong>Approvals</strong>
+                                        @foreach ($expense->approvals as $index => $approval)
+                                            <div class="text-muted">
+                                                <span>{{ $index + 1 }}. {{ $approval->user->name }} - </span>
+                                                @switch($approval->approval_status->id)
+                                                    @case(App\Models\ApprovalStatus::WAITING)
+                                                        <strong class="text-warning">{{ $approval->approval_status->name }}</strong>
+                                                        @break
+
+                                                    @case(App\Models\ApprovalStatus::APPROVED)
+                                                        <strong class="text-success">{{ $approval->approval_status->name }}</strong>
+                                                        @break
+
+                                                    @case(App\Models\ApprovalStatus::REJECTED)
+                                                        <strong class="text-danger">{{ $approval->approval_status->name }}</strong>
+                                                        @break
+                                                @endswitch
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="mb-3">
                                         <strong>Created At</strong>
                                         <div class="text-muted">{{ $expense->created_at }}</div>
                                     </div>

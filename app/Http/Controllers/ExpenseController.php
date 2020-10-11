@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseStoreRequest;
+use App\Models\ApprovalSetting;
 use App\Models\Category;
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
@@ -70,9 +72,17 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseStoreRequest $request)
     {
-        $expense = Expense::create($request->validated());
+        DB::transaction(function () use ($request) {
+            $expense = Expense::create($request->validated());
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
+            $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
+
+            $userIDs = $approval_settings->guarantors->pluck('id')->all();
+
+            $expense->createApprovals($userIDs);
+
+            $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
+        });
 
         return back();
     }
@@ -86,6 +96,8 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         abort_if(Gate::denies('access-expenses'), 401);
+
+        $expense->load(['approvals.approval_status', 'approvals.user']);
 
         return view('expenses.show', [
             'expense' => $expense,
