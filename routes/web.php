@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalSettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
@@ -45,5 +46,6 @@ Route::group(['middleware' => ['auth']], function () {
         'users' => UserController::class,
         'categories' => CategoryController::class,
         'expenses' => ExpenseController::class,
+        'approval-settings' => ApprovalSettingController::class,
     ]);
 });

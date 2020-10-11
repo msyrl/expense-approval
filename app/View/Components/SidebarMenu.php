@@ -35,6 +35,12 @@ class SidebarMenu extends Component
                 'url' => route('categories.index'),
             ],
             (object) [
+                'permission_slug' => 'access-approval-settings',
+                'label' => 'Approval Settings',
+                'icon' => 'fas fa-hand-holding-usd',
+                'url' => route('approval-settings.index'),
+            ],
+            (object) [
                 'permission_slug' => 'access-users',
                 'label' => 'Users',
                 'icon' => 'fas fa-users',
