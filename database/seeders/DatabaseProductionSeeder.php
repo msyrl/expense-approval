@@ -23,7 +23,10 @@ class DatabaseProductionSeeder extends Seeder
 
         $this->truncate();
 
-        $this->call(PermissionsTableSeeder::class);
+        $this->call([
+            PermissionsTableSeeder::class,
+            ApprovalStatusSeeder::class,
+        ]);
         $user = $this->createSuperAdminUser();
         $role = $this->createSuperAdminRole();
 
