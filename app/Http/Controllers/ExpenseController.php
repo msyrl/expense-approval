@@ -77,9 +77,11 @@ class ExpenseController extends Controller
 
             $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
 
-            $userIDs = $approval_settings->guarantors->pluck('id')->all();
+            if ($approval_settings && $approval_settings->guarantors->count()) {
+                $userIDs = $approval_settings->guarantors->pluck('id')->all();
 
-            $expense->createApprovals($userIDs);
+                $expense->createApprovals($userIDs);
+            }
 
             $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
         });
