@@ -25,15 +25,15 @@
                                         <strong>Status</strong>
                                         @switch($approval->approval_status->id)
                                             @case(App\Models\ApprovalStatus::WAITING)
-                                                <div>{{ $approval->approval_status->name }}</div>
+                                                <div class="text-muted">{{ $approval->approval_status->name }}</div>
                                                 @break
 
                                             @case(App\Models\ApprovalStatus::APPROVED)
-                                                <div class="text-success">{{ $approval->approval_status->name }}</div>
+                                                <div class="text-success">{{ $approval->approval_status->name }} | {{ $approval->approval_status->updated_at }}</div>
                                                 @break
 
                                             @case(App\Models\ApprovalStatus::REJECTED)
-                                                <div class="text-danger">{{ $approval->approval_status->name }}</div>
+                                                <div class="text-danger">{{ $approval->approval_status->name }} | {{ $approval->approval_status->updated_at }}</div>
                                                 @break
                                         @endswitch
                                     </div>
