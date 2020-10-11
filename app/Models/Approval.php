@@ -8,6 +8,16 @@ class Approval extends Pivot
 {
     protected $guarded = ['id'];
 
+    public function approval_status()
+    {
+        return $this->belongsTo(ApprovalStatus::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setToWaiting()
     {
         return $this->update([
