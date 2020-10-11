@@ -18,6 +18,11 @@ class Approval extends Pivot
         return $this->belongsTo(User::class);
     }
 
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class);
+    }
+
     public function setToWaiting()
     {
         return $this->update([
