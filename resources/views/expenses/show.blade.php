@@ -15,7 +15,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <strong>Amount</strong>
-                                        <div class="text-muted">{{ $expense->amount }}</div>
+                                        <div class="text-muted">{{ $expense->amount_with_separator }}</div>
                                     </div>
                                     <div class="mb-3">
                                         <strong>Description</strong>

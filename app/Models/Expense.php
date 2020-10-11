@@ -21,6 +21,11 @@ class Expense extends Model
         'updated_at',
     ];
 
+    public function getAmountWithSeparatorAttribute()
+    {
+        return number_format($this->attributes['amount'], 0, ',', '.');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

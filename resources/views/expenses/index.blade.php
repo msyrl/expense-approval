@@ -61,7 +61,7 @@
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <div class="d-sm-none">Amount</div>
-                                                <strong>{{ $resource->amount }}</strong>
+                                                <strong>{{ $resource->amount_with_separator }}</strong>
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <div class="d-sm-none">Last Updated: </div>
