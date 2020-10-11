@@ -28,7 +28,7 @@
                                                 <span>{{ $index + 1 }}. {{ $approval->user->name }} - </span>
                                                 @switch($approval->approval_status->id)
                                                     @case(App\Models\ApprovalStatus::WAITING)
-                                                        <strong class="text-warning">{{ $approval->approval_status->name }}</strong>
+                                                        <strong>{{ $approval->approval_status->name }}</strong>
                                                         @break
 
                                                     @case(App\Models\ApprovalStatus::APPROVED)
