@@ -19,7 +19,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <strong>Description</strong>
-                                        <div class="text-muted">{{ $expense->Description }}</div>
+                                        <div class="text-muted">{{ $expense->description ?? '-' }}</div>
                                     </div>
                                     <div class="mb-3">
                                         <strong>Created At</strong>

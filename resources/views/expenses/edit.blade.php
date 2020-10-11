@@ -43,8 +43,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="amount">Amount <span class="text-danger">*</span></label>
-                                            <input type="text" name="amount" class="form-control @error('amount') is-invalid @enderror" id="amount" placeholder="Amount" value="{{ old('amount') ?? $expense->amount }}" disabled>
-                                            @error('amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <input type="hidden" name="amount" value="{{ $expense->amount }}">
+                                            <div>{{ $expense->amount_with_separator }}</div>
                                         </div>
                                         <div class="form-group">
                                             <label for="description">Description</label>
