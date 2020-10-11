@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\ApprovalSettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -39,6 +40,15 @@ Route::group(['middleware' => ['auth']], function () {
     ], function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
+
+    Route::group([
+        'prefix' => 'approvals',
+        'as' => 'approvals.'
+    ], function () {
+        Route::get('/', [ApprovalController::class, 'index'])->name('index');
+        Route::get('/{approval}', [ApprovalController::class, 'show'])->name('show');
+        Route::put('/{approval}', [ApprovalController::class, 'update'])->name('update');
     });
 
     Route::resources([

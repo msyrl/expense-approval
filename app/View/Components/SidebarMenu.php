@@ -23,6 +23,12 @@ class SidebarMenu extends Component
     {
         return collect([
             (object) [
+                'permission_slug' => 'access-approvals',
+                'label' => 'Approvals',
+                'icon' => 'fas fa-check',
+                'url' => route('approvals.index'),
+            ],
+            (object) [
                 'permission_slug' => 'access-expenses',
                 'label' => 'Expenses',
                 'icon' => 'fas fa-dollar-sign',

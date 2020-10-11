@@ -58,6 +58,14 @@ class PermissionsTableSeeder extends Seeder
                     'updated_at' => (string) now(),
                 ];
             })
+            ->merge([
+                [
+                    'slug' => 'access-approvals',
+                    'name' => 'Access Approvals',
+                    'created_at' => (string) now(),
+                    'updated_at' => (string) now(),
+                ],
+            ])
             ->all();
     }
 }
