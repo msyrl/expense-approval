@@ -31,37 +31,22 @@ class Expense extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function users()
+    public function approvals()
     {
-        return $this
-            ->belongsToMany(
-                User::class,
-                'approval',
-                'expense_id',
-                'user_id'
-            )
-            ->withPivot([
-                'id',
-                'approval_status_id',
-            ])
-            ->withTimestamps();
+        return $this->hasMany(Approval::class);
     }
 
     public function createApprovals(array $userIDs)
     {
         $approvals = collect($userIDs)
-            ->map(function ($id) {
+            ->map(function ($user_id) {
                 return [
-                    $id => [
-                        'approval_status_id' => ApprovalStatus::WAITING,
-                    ],
+                    'user_id' => $user_id,
+                    'approval_status_id' => ApprovalStatus::WAITING,
                 ];
-            })
-            ->mapWithKeys(function ($id) {
-                return $id;
             })
             ->all();
 
-        return $this->users()->attach($approvals);
+        return $this->approvals()->createMany($approvals);
     }
 }
