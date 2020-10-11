@@ -37,7 +37,7 @@
                                             <legend class="col-form-label font-weight-bold">Permissions</legend>
                                             <div class="form-row">
                                                 @foreach ($permissions->chunk(4) as $chunk)
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-3 mb-3">
                                                         @foreach ($chunk as $permission)
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" class="custom-control-input" id="permission-{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}" @if((old('permissions') && in_array($permission->id, old('permissions'))) || ($permission->checked)) checked @endif>
