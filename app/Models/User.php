@@ -81,4 +81,20 @@ class User extends Authenticatable
     {
         return $this->permissions()->contains('slug', $permission_slug);
     }
+
+    public function expenses()
+    {
+        return $this
+            ->belongsToMany(
+                Expense::class,
+                'approval',
+                'user_id',
+                'expense_id'
+            )
+            ->withPivot([
+                'id',
+                'approval_status_id',
+            ])
+            ->withTimestamps();;
+    }
 }
