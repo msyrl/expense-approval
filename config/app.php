@@ -13,6 +13,7 @@ return [
     |
     */
 
+    'author' => 'msyachrul',
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
