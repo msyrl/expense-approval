@@ -5,6 +5,7 @@ use App\Http\Controllers\ApprovalSettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpensePrint;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -32,6 +33,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function () {
         return view('home.index');
+    });
+
+    Route::group([
+        'prefix' => 'expenses',
+        'as' => 'expenses.',
+    ], function () {
+        Route::get('/{expense}/print', ExpensePrint::class)->name('print');
     });
 
     Route::group([
