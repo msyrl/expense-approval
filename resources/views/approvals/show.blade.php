@@ -29,11 +29,11 @@
                                                 @break
 
                                             @case(App\Models\ApprovalStatus::APPROVED)
-                                                <div class="text-success">{{ $approval->approval_status->name }} | {{ $approval->approval_status->updated_at }}</div>
+                                                <div class="text-success">{{ $approval->approval_status->name }} | {{ $approval->updated_at }}</div>
                                                 @break
 
                                             @case(App\Models\ApprovalStatus::REJECTED)
-                                                <div class="text-danger">{{ $approval->approval_status->name }} | {{ $approval->approval_status->updated_at }}</div>
+                                                <div class="text-danger">{{ $approval->approval_status->name }} | {{ $approval->updated_at }}</div>
                                                 @break
                                         @endswitch
                                     </div>
