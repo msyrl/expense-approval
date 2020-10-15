@@ -21,7 +21,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $collection = Expense::query();
+        $collection = Expense::with(['categories']);
 
         if (request()->filled('q')) {
             $collection = $collection->where(function ($query) {
@@ -105,7 +105,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $expense->load(['approvals.approval_status', 'approvals.user']);
+        $expense->load(['approvals.approval_status', 'approvals.user', 'categories']);
 
         return view('expenses.show', [
             'expense' => $expense,
@@ -121,6 +121,8 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         abort_if(Gate::denies('edit-expenses'), 401);
+
+        $expense->load(['categories']);
 
         return view('expenses.edit', [
             'categories' => Category::orderBy('name', 'asc')->get(),

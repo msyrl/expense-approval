@@ -10,6 +10,14 @@
                             <div class="card card-outline card-primary">
                                 <div class="card-body">
                                     <div class="mb-3">
+                                        <strong>Categories</strong>
+                                        <div class="text-muted">
+                                            @foreach ($expense->categories as $index => $category)
+                                                <div>{{ $index + 1 }}. {{ $category->name }}</div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
                                         <strong>Recipient</strong>
                                         <div class="text-muted">{{ $expense->recipient }}</div>
                                     </div>
