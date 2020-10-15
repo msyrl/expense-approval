@@ -33,7 +33,7 @@
                                         <strong>Approvals</strong>
                                         @foreach ($expense->approvals as $index => $approval)
                                             <div class="text-muted">
-                                                <span>{{ $index + 1 }}. {{ $approval->user->name }} - </span>
+                                                <span>{{ $index + 1 }}. {{ $approval->user->name }} -</span>
                                                 @switch($approval->approval_status->id)
                                                     @case(App\Models\ApprovalStatus::WAITING)
                                                         <strong>{{ $approval->approval_status->name }}</strong>
