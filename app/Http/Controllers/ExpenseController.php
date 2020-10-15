@@ -21,7 +21,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $collection = Expense::with(['category']);
+        $collection = Expense::query();
 
         if (request()->filled('q')) {
             $collection = $collection->where(function ($query) {
@@ -73,7 +73,13 @@ class ExpenseController extends Controller
     public function store(ExpenseStoreRequest $request)
     {
         DB::transaction(function () use ($request) {
-            $expense = Expense::create($request->validated());
+            $expense = Expense::create($request->only([
+                'recipient',
+                'amount',
+                'description',
+            ]));
+
+            $expense->categories()->attach($request->categories);
 
             $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
 
@@ -131,7 +137,13 @@ class ExpenseController extends Controller
      */
     public function update(ExpenseStoreRequest $request, Expense $expense)
     {
-        $expense->update($request->validated());
+        $expense->update($request->only([
+            'recipient',
+            'amount',
+            'description',
+        ]));
+
+        $expense->categories()->sync($request->categories);
 
         $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
 

@@ -26,16 +26,21 @@
                                         <a href="{{ route('expenses.index') }}" class="btn btn-link">Cancel</a>
                                     </div>
                                     <div class="card-body">
-                                        <div class="form-group">
-                                            <label for="category_id">Category <span class="text-danger">*</span></label>
-                                            <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                                                <option value="">-- Select category --</option>
+                                        <fieldset class="form-group">
+                                            <legend class="col-form-label font-weight-bold">Categories <span class="text-danger">*</span><small class="text-danger font-weight-normal">@error('categories') {{ $message }} @enderror</small></legend>
+                                            <div class="row">
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}" @if((old('category_id') && old('category_id') == $category->id) || $expense->category_id == $category->id) selected @endif>{{ $category->name }}</option>
+                                                    <div class="col-sm-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="categories[]" id="category_id_{{ $category->id }}" value="{{ $category->id }}" @if((old('categories') && in_array($category->id, old('categories'))) || $expense->categories->contains('pivot.category_id', $category->id)) checked @endif>
+                                                            <label class="form-check-label" for="category_id_{{ $category->id }}">
+                                                                {{ $category->name }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                 @endforeach
-                                            </select>
-                                            @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                        </div>
+                                            </div>
+                                        </fieldset>
                                         <div class="form-group">
                                             <label for="recipient">Recipient <span class="text-danger">*</span></label>
                                             <input type="text" name="recipient" class="form-control @error('recipient') is-invalid @enderror" id="recipient" placeholder="Recipient" value="{{ old('recipient') ?? $expense->recipient }}">

@@ -20,6 +20,6 @@ class Category extends Model
 
     public function expenses()
     {
-        return $this->hasMany(Expense::class);
+        return $this->belongsToMany(Expense::class);
     }
 }

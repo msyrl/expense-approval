@@ -44,7 +44,6 @@
                                     <div class="container-fluid">
                                         <div class="row p-3 border-top border-bottom d-none d-sm-flex">
                                             <div class="col-12 col-sm">Recipient</div>
-                                            <div class="col-12 col-sm">Category</div>
                                             <div class="col-12 col-sm">Amount</div>
                                             <div class="col-12 col-sm">Last Updated</div>
                                             <div class="col-12 col-sm-2 text-right"></div>
@@ -54,10 +53,6 @@
                                             <div class="col-12 col-sm">
                                                 <div class="d-sm-none">Recipient:</div>
                                                 <a href="{{ route('expenses.show', $resource->id) }}"><strong>{{ $resource->recipient }}</strong></a>
-                                            </div>
-                                            <div class="col-12 col-sm">
-                                                <div class="d-sm-none">Category</div>
-                                                <strong>{{ $resource->category->name }}</strong>
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <div class="d-sm-none">Amount</div>
