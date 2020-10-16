@@ -53,17 +53,7 @@
                                             </div>
                                             <div class="col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
-                                                    @if ($resource->approval_status->id != App\Models\ApprovalStatus::WAITING)
-                                                        <form action="{{ route('approvals.update', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to set as waiting?')">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="hidden" name="approval_status_id" value="{{ App\Models\ApprovalStatus::WAITING }}">
-                                                            <button type="submit" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Set as waiting">
-                                                                <i class="fas fa-history"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    @if ($resource->approval_status->id != App\Models\ApprovalStatus::APPROVED)
+                                                    @if ($resource->approval_status->id == App\Models\ApprovalStatus::WAITING)
                                                         <form action="{{ route('approvals.update', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to approve?')">
                                                             @csrf
                                                             @method('PUT')
@@ -72,8 +62,6 @@
                                                                 <i class="fas fa-check"></i>
                                                             </button>
                                                         </form>
-                                                    @endif
-                                                    @if ($resource->approval_status->id != App\Models\ApprovalStatus::REJECTED)
                                                         <form action="{{ route('approvals.update', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to reject?')">
                                                             @csrf
                                                             @method('PUT')

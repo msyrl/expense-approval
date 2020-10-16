@@ -46,10 +46,6 @@ class ApprovalController extends Controller
         ]);
 
         switch ($request->approval_status_id) {
-            case ApprovalStatus::WAITING:
-                $approval->setToWaiting();
-                break;
-
             case ApprovalStatus::APPROVED:
                 $approval->setToApproved();
                 break;
