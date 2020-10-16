@@ -72,6 +72,9 @@
                                             </div>
                                             <div class="col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
+                                                    <a href="{{ route('expenses.print', $resource->id) }}" target="_blank" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Print">
+                                                        <div class="fas fa-print"></div>
+                                                    </a>
                                                     @can('edit-expenses')
                                                         <a href="{{ route('expenses.edit', $resource->id) }}" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Edit">
                                                             <i class="fas fa-edit"></i>

@@ -17,6 +17,8 @@ class ExpensePrint extends Controller
 
     public function __invoke(Expense $expense)
     {
+        $this->authorize('access-expenses');
+
         $expense->load(['approvals.approval_status', 'approvals.user', 'categories']);
 
         return $this

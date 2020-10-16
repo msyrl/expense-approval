@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Expense ID {{ $expense->id }}</title>
+    <style>
+        .v-align-top {
+            vertical-align: top;
+        }
+    </style>
 </head>
 <body>
-    <table cellspacing="0" cellpadding="3" width="100%" border="1">
+    <table cellspacing="0" cellpadding="5" width="100%" border="1">
         <tr>
-            <td>
-                <strong>Categories</strong>
+            <td colspan="2" style="text-align: center;">
+                <strong>{{ config('app.long_name') }}</strong>
             </td>
         </tr>
+
         <tr>
+            <td class="v-align-top" width="150px">
+                <strong>Categories</strong>
+            </td>
             <td>
                 <table cellspacing="0" cellpadding="0" width="100%">
                     @foreach ($expense->categories as $index => $category)
@@ -24,29 +33,30 @@
         </tr>
 
         <tr>
-            <td>
+            <td class="v-align-top">
                 <strong>Recipient</strong>
             </td>
-        </tr>
-        <tr>
             <td>{{ $expense->recipient }}</td>
+        </tr
+        >
+        <tr>
+            <td class="v-align-top">
+                <strong>Amount</strong>
+            </td>
+            <td>{{ $expense->amount_with_separator }}</td>
         </tr>
 
         <tr>
-            <td>
+            <td class="v-align-top">
                 <strong>Description</strong>
             </td>
-        </tr>
-        <tr>
             <td>{{ $expense->description ?? '-' }}</td>
         </tr>
 
         <tr>
-            <td>
+            <td class="v-align-top">
                 <strong>Approvals</strong>
             </td>
-        </tr>
-        <tr>
             <td>
                 <table cellspacing="0" cellpadding="0" width="100%">
                     @foreach ($expense->approvals as $index => $approval)
@@ -71,24 +81,6 @@
                     @endforeach
                 </table>
             </td>
-        </tr>
-
-        <tr>
-            <td>
-                <strong>Created At</strong>
-            </td>
-        </tr>
-        <tr>
-            <td>{{ $expense->created_at }}</td>
-        </tr>
-
-        <tr>
-            <td>
-                <strong>Last Updated</strong>
-            </td>
-        </tr>
-        <tr>
-            <td>{{ $expense->updated_at }}</td>
         </tr>
     </table>
 </body>
