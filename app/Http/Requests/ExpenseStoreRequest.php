@@ -25,6 +25,10 @@ class ExpenseStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'source_id' => [
+                'required',
+                'exists:sources,id',
+            ],
             'category_id' => [
                 'required',
                 'exists:categories,id',

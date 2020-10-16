@@ -10,6 +10,10 @@
                             <div class="card card-outline card-primary">
                                 <div class="card-body">
                                     <div class="mb-3">
+                                        <strong>Source</strong>
+                                        <div class="text-muted">{{ $expense->source->name }}</div>
+                                    </div>
+                                    <div class="mb-3">
                                         <strong>Category</strong>
                                         <div class="text-muted">{{ $expense->category->name }}</div>
                                     </div>

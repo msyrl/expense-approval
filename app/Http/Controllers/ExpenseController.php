@@ -6,6 +6,7 @@ use App\Http\Requests\ExpenseStoreRequest;
 use App\Models\ApprovalSetting;
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Source;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -21,7 +22,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $collection = Expense::with(['category']);
+        $collection = Expense::with(['source','category']);
 
         if (request()->filled('q')) {
             $collection = $collection->where(function ($query) {
@@ -60,6 +61,7 @@ class ExpenseController extends Controller
         abort_if(Gate::denies('create-expenses'), 401);
 
         return view('expenses.create', [
+            'sources' => Source::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
         ]);
     }
@@ -99,7 +101,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $expense->load(['approvals.approval_status', 'approvals.user', 'category']);
+        $expense->load(['approvals.approval_status', 'approvals.user', 'source', 'category']);
 
         return view('expenses.show', [
             'expense' => $expense,
@@ -116,9 +118,10 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('edit-expenses'), 401);
 
-        $expense->load(['category']);
+        $expense->load(['source', 'category']);
 
         return view('expenses.edit', [
+            'sources' => Source::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
             'expense' => $expense,
         ]);

@@ -19,6 +19,13 @@
 
         <tr>
             <td class="v-align-top" width="150px">
+                <strong>Source</strong>
+            </td>
+            <td>{{ $expense->source->name }}</td>
+        </tr>
+
+        <tr>
+            <td class="v-align-top" width="150px">
                 <strong>Category</strong>
             </td>
             <td>{{ $expense->category->name }}</td>

@@ -17,4 +17,9 @@ class Source extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

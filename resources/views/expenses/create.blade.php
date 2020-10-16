@@ -26,6 +26,16 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
+                                            <label for="source_id">Source <span class="text-danger">*</span></label>
+                                            <select name="source_id" id="source_id" class="form-control @error('source_id') is-invalid @enderror">
+                                                <option value="">-- Select source --</option>
+                                                @foreach ($sources as $source)
+                                                    <option value="{{ $source->id }}">{{ $source->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('source_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                        <div class="form-group">
                                             <label for="category_id">Category <span class="text-danger">*</span></label>
                                             <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
                                                 <option value="">-- Select category --</option>
