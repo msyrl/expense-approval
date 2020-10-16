@@ -44,17 +44,17 @@
                                         </div>
                                         @forelse ($roles as $role)
                                         <div class="row p-3 border-top border-bottom">
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Role:</div>
                                                 <a href="{{ route('roles.show', $role->id) }}"><strong>{{ $role->name }}</strong></a>
                                                 <div class="text-muted">{{ $role->slug }}</div>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Last Updated: </div>
                                                 <strong>{{ $role->updated_at }}</strong>
                                                 <div class="text-muted">{{ $role->updated_at->diffForHumans() }}</div>
                                             </div>
-                                            <div class="col-12 col-sm-2 text-right">
+                                            <div class="mb-2 col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
                                                     @can('edit-roles')
                                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Edit">

@@ -55,22 +55,22 @@
                                         </div>
                                         @forelse ($collection as $resource)
                                         <div class="row p-3 border-top border-bottom">
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Approval Setting:</div>
                                                 <a href="{{ route('approval-settings.show', $resource->id) }}"><strong>{{ ($resource->from_amount_with_separator) }} - {{ $resource->to_amount_with_separator }}</strong></a>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Guarantors: </div>
                                                 @foreach ($resource->guarantors as $index => $user)
                                                     <div class="text-muted">{{ $index + 1 . '. ' . $user->name }}</div>
                                                 @endforeach
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Last Updated: </div>
                                                 <strong>{{ $resource->updated_at }}</strong>
                                                 <div class="text-muted">{{ $resource->updated_at->diffForHumans() }}</div>
                                             </div>
-                                            <div class="col-12 col-sm-2 text-right">
+                                            <div class="mb-2 col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
                                                     @can('edit-approval-settings')
                                                         <a href="{{ route('approval-settings.edit', $resource->id) }}" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Edit">

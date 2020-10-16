@@ -57,28 +57,28 @@
                                         </div>
                                         @forelse ($collection as $resource)
                                         <div class="row p-3 border-top border-bottom">
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Recipient:</div>
                                                 <a href="{{ route('expenses.show', $resource->id) }}"><strong>{{ $resource->recipient }}</strong></a>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Source:</div>
                                                 <strong>{{ $resource->Source->name }}</strong>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Category:</div>
                                                 <strong>{{ $resource->category->name }}</strong>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Amount</div>
                                                 <strong>{{ $resource->amount_with_separator }}</strong>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Last Updated: </div>
                                                 <strong>{{ $resource->updated_at }}</strong>
                                                 <div class="text-muted">{{ $resource->updated_at->diffForHumans() }}</div>
                                             </div>
-                                            <div class="col-12 col-sm-2 text-right">
+                                            <div class="mb-2 col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
                                                     <a href="{{ route('expenses.print', $resource->id) }}" target="_blank" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Print">
                                                         <div class="fas fa-print"></div>

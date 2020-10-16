@@ -31,11 +31,11 @@
                                         </div>
                                         @forelse ($collection as $resource)
                                         <div class="row p-3 border-top border-bottom">
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Expense:</div>
                                                 <a href="{{ route('approvals.show', $resource->id) }}"><strong>{{ $resource->expense->id }} - {{ $resource->expense->recipient }}</strong></a>
                                             </div>
-                                            <div class="col-12 col-sm">
+                                            <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Approval Status:</div>
                                                 @switch($resource->approval_status->id)
                                                     @case(App\Models\ApprovalStatus::WAITING)
@@ -51,7 +51,7 @@
                                                         @break
                                                 @endswitch
                                             </div>
-                                            <div class="col-12 col-sm-2 text-right">
+                                            <div class="mb-2 col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
                                                     @if ($resource->approval_status->id == App\Models\ApprovalStatus::WAITING)
                                                         <form action="{{ route('approvals.update', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to approve?')">
