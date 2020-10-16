@@ -11,6 +11,7 @@ use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\Role;
 use App\Models\RoleUser;
+use App\Models\Source;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
@@ -48,6 +49,7 @@ class DatabaseProductionSeeder extends Seeder
         User::truncate();
         Role::truncate();
         Permission::truncate();
+        Source::truncate();
         Category::truncate();
         Expense::truncate();
         Guarantor::truncate();
