@@ -8,6 +8,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpensePrint;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,5 +66,6 @@ Route::group(['middleware' => ['auth']], function () {
         'categories' => CategoryController::class,
         'expenses' => ExpenseController::class,
         'approval-settings' => ApprovalSettingController::class,
+        'sources' => SourceController::class,
     ]);
 });

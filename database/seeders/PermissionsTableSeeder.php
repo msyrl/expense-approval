@@ -38,6 +38,7 @@ class PermissionsTableSeeder extends Seeder
             'Categories',
             'Expenses',
             'Approval Settings',
+            'Sources',
         ];
 
         return collect($menus)

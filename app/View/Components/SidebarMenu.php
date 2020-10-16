@@ -35,6 +35,12 @@ class SidebarMenu extends Component
                 'url' => route('expenses.index'),
             ],
             (object) [
+                'permission_slug' => 'access-sources',
+                'label' => 'Sources',
+                'icon' => 'fas fa-hand-holding-usd',
+                'url' => route('sources.index'),
+            ],
+            (object) [
                 'permission_slug' => 'access-categories',
                 'label' => 'Categories',
                 'icon' => 'fas fa-tag',
