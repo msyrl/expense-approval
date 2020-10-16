@@ -19,7 +19,7 @@ class ExpensePrint extends Controller
     {
         $this->authorize('access-expenses');
 
-        $expense->load(['approvals.approval_status', 'approvals.user', 'categories']);
+        $expense->load(['approvals.approval_status', 'approvals.user', 'category']);
 
         return $this
             ->pdf

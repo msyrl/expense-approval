@@ -18,8 +18,8 @@ class Category extends Model
         'updated_at',
     ];
 
-    public function expenses()
+    public function expense()
     {
-        return $this->belongsToMany(Expense::class);
+        return $this->hasMany(Expense::class);
     }
 }

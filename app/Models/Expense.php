@@ -13,6 +13,7 @@ class Expense extends Model
     protected $guarded = ['id'];
 
     protected $sortables = [
+        'category_id',
         'recipient',
         'amount',
         'description',
@@ -30,9 +31,9 @@ class Expense extends Model
         return $this->hasMany(Approval::class);
     }
 
-    public function categories()
+    public function category()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function createApprovals(array $userIDs)

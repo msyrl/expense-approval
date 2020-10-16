@@ -19,17 +19,9 @@
 
         <tr>
             <td class="v-align-top" width="150px">
-                <strong>Categories</strong>
+                <strong>Category</strong>
             </td>
-            <td>
-                <table cellspacing="0" cellpadding="0" width="100%">
-                    @foreach ($expense->categories as $index => $category)
-                        <tr>
-                            <td>{{ $index + 1 }}. {{ $category->name }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            </td>
+            <td>{{ $expense->category->name }}</td>
         </tr>
 
         <tr>

@@ -21,7 +21,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $collection = Expense::with(['categories']);
+        $collection = Expense::with(['category']);
 
         if (request()->filled('q')) {
             $collection = $collection->where(function ($query) {
@@ -73,13 +73,7 @@ class ExpenseController extends Controller
     public function store(ExpenseStoreRequest $request)
     {
         DB::transaction(function () use ($request) {
-            $expense = Expense::create($request->only([
-                'recipient',
-                'amount',
-                'description',
-            ]));
-
-            $expense->categories()->attach($request->categories);
+            $expense = Expense::create($request->validated());
 
             $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
 
@@ -105,7 +99,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $expense->load(['approvals.approval_status', 'approvals.user', 'categories']);
+        $expense->load(['approvals.approval_status', 'approvals.user', 'category']);
 
         return view('expenses.show', [
             'expense' => $expense,
@@ -122,7 +116,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('edit-expenses'), 401);
 
-        $expense->load(['categories']);
+        $expense->load(['category']);
 
         return view('expenses.edit', [
             'categories' => Category::orderBy('name', 'asc')->get(),
@@ -139,13 +133,7 @@ class ExpenseController extends Controller
      */
     public function update(ExpenseStoreRequest $request, Expense $expense)
     {
-        $expense->update($request->only([
-            'recipient',
-            'amount',
-            'description',
-        ]));
-
-        $expense->categories()->sync($request->categories);
+        $expense->update($request->validated());
 
         $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
 
@@ -161,6 +149,12 @@ class ExpenseController extends Controller
     public function destroy(Expense $expense)
     {
         abort_if(Gate::denies('delete-expenses'), 401);
+
+        if ($expense->approvals->count()) {
+            request()->session()->flash('alert-danger', 'Can\'t delete non-empty data.');
+
+            return back();
+        }
 
         $expense->delete();
 
