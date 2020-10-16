@@ -15,6 +15,7 @@ return [
 
     'author' => 'msyachrul',
     'name' => env('APP_NAME', 'Laravel'),
+    'long_name' => env('APP_LONG_NAME', 'Laravel Long Name'),
 
     /*
     |--------------------------------------------------------------------------
