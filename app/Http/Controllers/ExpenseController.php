@@ -153,11 +153,13 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('delete-expenses'), 401);
 
-        if ($expense->approvals->count()) {
-            request()->session()->flash('alert-danger', 'Can\'t delete non-empty data.');
+        if ($expense->hasResponded()) {
+            request()->session()->flash('alert-danger', 'Can\'t delete responded data.');
 
             return back();
         }
+
+        $expense->approvals()->delete();
 
         $expense->delete();
 

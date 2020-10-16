@@ -55,4 +55,9 @@ class Expense extends Model
 
         return $this->approvals()->createMany($approvals);
     }
+
+    public function hasResponded()
+    {
+        return $this->approvals->whereIn('approval_status_id', [ApprovalStatus::APPROVED, ApprovalStatus::REJECTED])->count() > 0;
+    }
 }
