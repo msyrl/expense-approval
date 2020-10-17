@@ -52,6 +52,7 @@
                                             <div class="col-12 col-sm">Source</div>
                                             <div class="col-12 col-sm">Category</div>
                                             <div class="col-12 col-sm">Amount</div>
+                                            <div class="col-12 col-sm">Created At</div>
                                             <div class="col-12 col-sm">Last Updated</div>
                                             <div class="col-12 col-sm-2 text-right"></div>
                                         </div>
@@ -72,6 +73,11 @@
                                             <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Amount</div>
                                                 <strong>{{ $resource->amount_with_separator }}</strong>
+                                            </div>
+                                            <div class="mb-2 col-12 col-sm">
+                                                <div class="d-sm-none">Created At: </div>
+                                                <strong>{{ $resource->created_at }}</strong>
+                                                <div class="text-muted">{{ $resource->created_at->diffForHumans() }}</div>
                                             </div>
                                             <div class="mb-2 col-12 col-sm">
                                                 <div class="d-sm-none">Last Updated: </div>
