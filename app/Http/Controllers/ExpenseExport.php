@@ -14,6 +14,8 @@ class ExpenseExport extends Controller
      */
     public function __invoke()
     {
+        $this->authorize('access-expenses');
+
         return new ExpensesExport();
     }
 }
