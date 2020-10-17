@@ -5,6 +5,7 @@ use App\Http\Controllers\ApprovalSettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseExport;
 use App\Http\Controllers\ExpensePrint;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -41,6 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'expenses.',
     ], function () {
         Route::get('/{expense}/print', ExpensePrint::class)->name('print');
+        Route::get('/export', ExpenseExport::class)->name('export');
     });
 
     Route::group([
