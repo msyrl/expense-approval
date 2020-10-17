@@ -39,8 +39,12 @@ class Approval extends Pivot
 
     public function setToRejected()
     {
-        return $this->update([
-            'approval_status_id' => ApprovalStatus::REJECTED,
-        ]);
+        $data = ['approval_status_id' => ApprovalStatus::REJECTED];
+
+        if (request()->filled('note')) {
+            $data['note'] = request()->get('note');
+        }
+
+        return $this->update($data);
     }
 }

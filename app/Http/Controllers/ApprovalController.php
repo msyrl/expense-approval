@@ -38,11 +38,17 @@ class ApprovalController extends Controller
     {
         abort_if($approval->user_id != auth()->id(), 401);
 
-        $request->validate([
+        $this->validate($request, [
             'approval_status_id' => [
                 'required',
                 'exists:approval_statuses,id',
             ],
+            'note' => [
+                'nullable',
+                'required_if:approval_status_id,' . ApprovalStatus::REJECTED,
+            ],
+        ], [
+            'note.required_if' => 'The note field is required when approval status id is rejected.',
         ]);
 
         switch ($request->approval_status_id) {
