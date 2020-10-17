@@ -44,7 +44,7 @@
                                                         @break
 
                                                     @case(App\Models\ApprovalStatus::REJECTED)
-                                                        <strong class="text-danger">{{ $approval->approval_status->name }} | {{ $approval->updated_at }}</strong>
+                                                        <strong class="text-danger">{{ $approval->approval_status->name }} ({{ $approval->note }}) | {{ $approval->updated_at }}</strong>
                                                         @break
                                                 @endswitch
                                             </div>
