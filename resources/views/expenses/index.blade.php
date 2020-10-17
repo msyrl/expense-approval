@@ -25,7 +25,8 @@
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            @can('create-expenses') <a href="{{ route('expenses.create') }}" class="btn btn-primary my-2">Create</a> @endcan
+                                            @can('create-expenses') <a href="{{ route('expenses.create') }}" class="btn btn-primary my-2 mr-2">Create</a> @endcan
+                                            <a href="{{ route('expenses.export', request()->all())  }}" target="_blank" class="btn btn-outline-primary my-2">Export</a>
                                         </div>
                                         <div class="col-auto ml-auto">
                                             <form action="" method="GET" autocomplete="off">
