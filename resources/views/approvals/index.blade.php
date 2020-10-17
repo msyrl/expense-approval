@@ -62,14 +62,40 @@
                                                                 <i class="fas fa-check"></i>
                                                             </button>
                                                         </form>
-                                                        <form action="{{ route('approvals.update', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to reject?')">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="hidden" name="approval_status_id" value="{{ App\Models\ApprovalStatus::REJECTED }}">
-                                                            <button type="submit" class="btn btn-sm btn-danger" tooltip data-placement="bottom" title="Reject">
+                                                        <div class="text-left">
+                                                            <button type="button" class="btn btn-sm btn-danger" tooltip data-placement="bottom" title="Reject" data-toggle="modal" data-target="#rejectModal-{{ $resource->id }}">
                                                                 <i class="fas fa-times"></i>
                                                             </button>
-                                                        </form>
+
+                                                            <div class="modal fade" id="rejectModal-{{ $resource->id }}" tabindex="-1" aria-labelledby="rejectModalLabel-{{ $resource->id }}" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <form action="{{ route('approvals.update', $resource->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <input type="hidden" name="approval_status_id" value="{{ App\Models\ApprovalStatus::REJECTED }}">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="rejectModalLabel-{{ $resource->id }}">Are you sure want to reject?</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="note">Note <span class="text-danger">*</span></label>
+                                                                                    <textarea name="note" id="note" rows="4" class="form-control @error('note') is-invalid @enderror">{{ old('note') }}</textarea>
+                                                                                    @error('note') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>
