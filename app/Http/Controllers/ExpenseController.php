@@ -22,7 +22,7 @@ class ExpenseController extends Controller
     {
         abort_if(Gate::denies('access-expenses'), 401);
 
-        $collection = Expense::with(['source','category']);
+        $collection = Expense::with(['source','category', 'approvals.approval_status', 'approvals.user']);
 
         if (request()->filled('q')) {
             $collection = $collection->where(function ($query) {

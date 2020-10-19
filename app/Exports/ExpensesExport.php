@@ -38,7 +38,7 @@ class ExpensesExport implements FromCollection, Responsable
 
     private function setExpenses(): Collection
     {
-        $expenses = Expense::with(['source', 'category']);
+        $expenses = Expense::with(['source', 'category', 'approvals.approval_status', 'approvals.user']);
 
         if (request()->filled('source_id')) {
             $expenses = $expenses->where('source_id', request()->get('source_id'));
@@ -52,6 +52,13 @@ class ExpensesExport implements FromCollection, Responsable
             ->withSortables()
             ->get()
             ->map(function ($expense) {
+                $approvals = [];
+
+                foreach ($expense->approvals as $index => $approval) {
+                    $no = $index + 1;
+                    $approvals[] =  "{$no}. {$approval->user->name} ({$approval->approval_status->name})";
+                }
+
                 return (object) [
                     'ID' => $expense->id,
                     'SOURCE' => $expense->source->name,
@@ -59,6 +66,7 @@ class ExpensesExport implements FromCollection, Responsable
                     'RECIPIENT' => $expense->recipient,
                     'AMOUNT' => $expense->amount,
                     'DESCRIPTION' => $expense->description,
+                    'APPROVALS' => implode(', ', $approvals),
                     'CREATED AT' => $expense->created_at->toDateTimeString(),
                     'LAST UPDATED' => $expense->updated_at->toDateTimeString(),
                 ];

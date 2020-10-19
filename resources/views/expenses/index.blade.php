@@ -53,8 +53,7 @@
                                             <div class="col-12 col-sm">Source</div>
                                             <div class="col-12 col-sm">Category</div>
                                             <div class="col-12 col-sm">Amount</div>
-                                            <div class="col-12 col-sm">Created At</div>
-                                            <div class="col-12 col-sm">Last Updated</div>
+                                            <div class="col-12 col-sm">Approvals</div>
                                             <div class="col-12 col-sm-2 text-right"></div>
                                         </div>
                                         @forelse ($collection as $resource)
@@ -76,14 +75,25 @@
                                                 <strong>{{ $resource->amount_with_separator }}</strong>
                                             </div>
                                             <div class="mb-2 col-12 col-sm">
-                                                <div class="d-sm-none">Created At: </div>
-                                                <strong>{{ $resource->created_at }}</strong>
-                                                <div class="text-muted">{{ $resource->created_at->diffForHumans() }}</div>
-                                            </div>
-                                            <div class="mb-2 col-12 col-sm">
-                                                <div class="d-sm-none">Last Updated: </div>
-                                                <strong>{{ $resource->updated_at }}</strong>
-                                                <div class="text-muted">{{ $resource->updated_at->diffForHumans() }}</div>
+                                                <div class="d-sm-none">Approvals</div>
+                                                @foreach ($resource->approvals as $index => $approval)
+                                                    <div>
+                                                        <span>{{ $index + 1 }}. {{ $approval->user->name }}</span>
+                                                        @switch($approval->approval_status->id)
+                                                            @case(App\Models\ApprovalStatus::WAITING)
+                                                                <strong>({{ $approval->approval_status->name }})</strong>
+                                                                @break
+
+                                                            @case(App\Models\ApprovalStatus::APPROVED)
+                                                                <strong class="text-success">({{ $approval->approval_status->name }})</strong>
+                                                                @break
+
+                                                            @case(App\Models\ApprovalStatus::REJECTED)
+                                                                <strong class="text-danger">({{ $approval->approval_status->name }})</strong>
+                                                                @break
+                                                        @endswitch
+                                                    </div>
+                                                @endforeach
                                             </div>
                                             <div class="mb-2 col-12 col-sm-2 text-right">
                                                 <div class="btn-group" role="group">
