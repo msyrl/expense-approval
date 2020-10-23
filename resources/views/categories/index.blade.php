@@ -18,10 +18,10 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="row px-1 mb-2">
-                                <div class="col-6 col-sm-4 px-1 mr-auto">
+                                <div class="col col-sm-4 px-1">
                                     <x-list-search />
                                 </div>
-                                <div class="col-auto px-1">
+                                <div class="col-auto px-1 ml-auto">
                                     <x-filter-modal :paginator="$categories">
                                         <x-slot name="body">
                                             <x-sortables :sortables="$sortables" />
