@@ -6,4 +6,4 @@ Refactor
 [x] Categories
 [x] Sources
 [x] Expenses
-[ ] Approvals
+[x] Approvals
