@@ -1,22 +1,15 @@
-<!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>{{ $title }}</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    @forelse ($urls as $key => $url)
-                        @if ($url === end($urls))
-                            <li class="breadcrumb-item active">{{ $key }}</li>
-                        @else
-                            <li class="breadcrumb-item"><a href="{{ $url }}">{{ $key }}</a></li>
-                        @endif
-                    @empty
-
-                    @endforelse
-                </ol>
+        <div class="row align-items-end">
+            <div class="col-12">
+                <div class="d-flex align-items-center">
+                    @isset($backUrl)
+                        <a href="{{ $backUrl }}" class="btn btn-link pl-1">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                    @endisset
+                    <h1>{{ $name }}</h1>
+                </div>
             </div>
         </div>
     </div><!-- /.container-fluid -->

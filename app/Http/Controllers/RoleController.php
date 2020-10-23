@@ -6,8 +6,6 @@ use App\Http\Requests\RoleStoreRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -18,43 +16,24 @@ class RoleController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-roles'), 401);
-
-        $sortables = [
-            'Slug A-Z' => 'slug|asc',
-            'Slug Z-A' => 'slug|desc',
-            'Name A-Z' => 'name|asc',
-            'Name Z-A' => 'name|desc',
-            'Last Updated A-Z' => 'updated_at|asc',
-            'Last Updated Z-A' => 'updated_at|desc',
-        ];
+        $this->authorize('access-roles');
 
         $roles = Role::query();
 
         if (request()->filled('q')) {
-            $q = request()->get('q');
+            $roles = $roles->where(function ($query) {
+                $q = request()->get('q');
 
-            $roles = $roles
-                ->where('slug', 'LIKE', "%{$q}%")
-                ->orWhere('name', 'LIKE', "%{$q}%");
+                return $query->where('slug', 'LIKE', "%{$q}%")
+                    ->orWhere('name', 'LIKE', "%{$q}%");
+            });
         }
 
-        if (request()->filled('sort_by')) {
-            if (in_array(request()->get('sort_by'), $sortables)) {
-                list($sort, $order) = Str::of(request()->get('sort_by'))->explode('|');
-
-                $roles = $roles->orderBy($sort, $order);
-            }
-        }
-
-        $roles = $roles
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $roles = $roles->getPaginate();
 
         return view('roles.index', [
             'roles' => $roles,
-            'sortables' => $sortables,
+            'sortables' => (new Role)->getSortables(),
         ]);
     }
 
@@ -65,11 +44,13 @@ class RoleController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-roles'), 401);
+        $this->authorize('create-roles');
 
         $permissions = Permission::all();
 
-        return view('roles.create', ['permissions' => $permissions]);
+        return view('roles.create', [
+            'permissions' => $permissions,
+        ]);
     }
 
     /**
@@ -80,18 +61,18 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        $role = new Role;
-        $role->name = $request->name;
-        $role->slug = $request->slug ?? $request->name;
-        $role->save();
+        $role = Role::create([
+            'name' => $request->name,
+            'slug' => $request->slug ?? $request->name,
+        ]);
 
-        if ($request->has('permissions')) {
+        if ($request->filled('permissions')) {
             $role->permissions()->sync($request->permissions);
         }
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('roles.show', $role->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('roles.show', $role)
+            ->with('success', 'Success created new data.');
     }
 
     /**
@@ -102,11 +83,13 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        abort_if(Gate::denies('access-roles'), 401);
+        $this->authorize('access-roles');
 
         $role->load(['permissions']);
 
-        return view('roles.show', ['role' => $role]);
+        return view('roles.show', [
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -117,17 +100,11 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        abort_if(Gate::denies('edit-roles'), 401);
-
-        $permissions = Permission::all();
+        $this->authorize('edit-roles');
 
         $role->load(['permissions']);
 
-        $permissions = $permissions->map(function ($permission) use ($role) {
-            $permission->checked = $role->permissions->contains('id', $permission->id);
-
-            return $permission;
-        });
+        $permissions = Permission::all();
 
         return view('roles.edit', [
             'role' => $role,
@@ -144,17 +121,18 @@ class RoleController extends Controller
      */
     public function update(RoleStoreRequest $request, Role $role)
     {
-        $role->name = $request->name;
-        $role->slug = $request->slug ?? $request->name;
-        $role->save();
+        $role->update([
+            'name' => $request->name,
+            'slug' => $request->slug ?? $request->name,
+        ]);
 
-        if ($request->has('permissions')) {
+        if ($request->filled('permissions')) {
             $role->permissions()->sync($request->permissions);
         }
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('roles.show', $role->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('roles.show', $role)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -165,12 +143,18 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        abort_if(Gate::denies('delete-roles'), 401);
+        $this->authorize('delete-roles');
+
+        if ($role->permissions->count()) {
+            return back()->with('error', 'Can\'t delete non-empty data.');
+        }
 
         $role->delete();
 
-        request()->session()->flash('alert-success', 'Success deleted the data.');
-
-        return back();
+        return redirect()
+            ->route('roles.index', [
+                'sort_by' => 'created_at|desc',
+            ])
+            ->with('success', 'Success deleted the data.');
     }
 }

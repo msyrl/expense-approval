@@ -27,42 +27,53 @@ class SidebarMenu extends Component
                 'label' => 'Approvals',
                 'icon' => 'fas fa-check',
                 'url' => route('approvals.index'),
+                'base_url' => route('approvals.index'),
             ],
             (object) [
                 'permission_slug' => 'access-expenses',
                 'label' => 'Expenses',
                 'icon' => 'fas fa-dollar-sign',
                 'url' => route('expenses.index'),
+                'base_url' => route('expenses.index'),
             ],
             (object) [
                 'permission_slug' => 'access-sources',
                 'label' => 'Sources',
                 'icon' => 'fas fa-hand-holding-usd',
                 'url' => route('sources.index'),
+                'base_url' => route('sources.index'),
             ],
             (object) [
                 'permission_slug' => 'access-categories',
                 'label' => 'Categories',
                 'icon' => 'fas fa-tag',
                 'url' => route('categories.index'),
+                'base_url' => route('categories.index'),
             ],
             (object) [
                 'permission_slug' => 'access-approval-settings',
                 'label' => 'Approval Settings',
                 'icon' => 'fas fa-hand-holding-usd',
                 'url' => route('approval-settings.index'),
+                'base_url' => route('approval-settings.index'),
             ],
             (object) [
                 'permission_slug' => 'access-users',
                 'label' => 'Users',
                 'icon' => 'fas fa-users',
-                'url' => route('users.index'),
+                'url' => route('users.index', [
+                    'sort_by' => 'created_at|desc',
+                ]),
+                'base_url' => route('users.index'),
             ],
             (object) [
                 'permission_slug' => 'access-roles',
                 'label' => 'Roles',
                 'icon' => 'fas fa-user-lock',
-                'url' => route('roles.index'),
+                'url' => route('roles.index', [
+                    'sort_by' => 'created_at|desc',
+                ]),
+                'base_url' => route('roles.index'),
             ],
         ]);
     }
@@ -74,6 +85,7 @@ class SidebarMenu extends Component
                 'label' => 'My Profile',
                 'icon' => 'fas fa-user-circle',
                 'url' => route('profile.index'),
+                'base_url' => route('profile.index'),
             ],
         ]);
     }

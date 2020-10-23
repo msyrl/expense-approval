@@ -2,109 +2,108 @@
     <x-slot name="content">
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <x-content-header title="Approval Settings" :urls="['Approval Settings' => route('approval-settings.index')]" />
+            <x-content-header name="Approval Settings" />
 
             <!-- Main content -->
             <section class="content">
 
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
-                        <x-alert-success>
-                            {!! session()->get('alert-success') !!}
-                        </x-alert-success>
+                    @if (session()->has('success'))
+                        <x-alert-success>{{ session()->get('success') }}</x-alert-success>
                     @endif
-                    @if (session()->has('alert-danger'))
-                        <x-alert-danger>
-                            {!! session()->get('alert-danger') !!}
-                        </x-alert-danger>
+                    @if (session()->has('error'))
+                        <x-alert-danger>{{ session()->get('error') }}</x-alert-danger>
                     @endif
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row px-1 mb-2">
+                                <div class="col-6 col-sm-4 px-1 mr-auto">
+                                    <x-list-search />
+                                </div>
+                                <div class="col-auto px-1">
+                                    <x-filter-modal :paginator="$approval_settings">
+                                        <x-slot name="body">
+                                            <x-sortables :sortables="$sortables" />
+                                        </x-slot>
+                                    </x-filter-modal>
+                                </div>
+                                <div class="col-auto px-1">
+                                    @can('create-approval-settings')
+                                        <x-create-button :url="route('approval-settings.create')" />
+                                    @endcan
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
                             <!-- Default box -->
-                            <div class="card card-outline card-primary">
-                                <div class="card-header">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            @can('create-approval-settings') <a href="{{ route('approval-settings.create') }}" class="btn btn-primary my-2">Create</a> @endcan
+                            <div class="card">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-none d-sm-block">
+                                        <div class="row">
+                                            <div class="col-12 col-sm text-muted">
+                                                <x-list-header name="From Amount" asc="from_amount|asc" desc="from_amount|desc" />
+                                            </div>
+                                            <div class="col-12 col-sm text-muted">
+                                                <x-list-header name="To Amount" asc="to_amount|asc" desc="to_amount|desc" />
+                                            </div>
+                                            <div class="col-12 col-sm text-muted">Guarantors</div>
+                                            <div class="col-12 col-sm-1 text-right"></div>
                                         </div>
-                                        <div class="col-auto ml-auto">
-                                            <form action="" method="GET" autocomplete="off">
-                                                <div class="form-group row mb-0">
-                                                    <label for="sort_by" class="col-form-label col-auto">Sort By</label>
-                                                    <div class="col">
-                                                        <select name="sort_by" id="sort_by" class="form-control" onchange="this.form.submit()">
-                                                            <option value="" hidden>Sort By</option>
-                                                            @foreach ($sortables as $name => $sortable)
-                                                                <option value="{{ $sortable }}" @if(request()->get('sort_by') === $sortable) selected @endif>{{ $name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                    </li>
+                                    @forelse ($approval_settings as $approval_setting)
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-12 col-sm">
+                                                    <div class="d-sm-none">From Amount:</div>
+                                                    <div>{{ $approval_setting->from_amount_with_separator }}</div>
+                                                </div>
+                                                <div class="col-12 col-sm">
+                                                    <div class="d-sm-none">To Amount:</div>
+                                                    <div>{{ $approval_setting->to_amount_with_separator }}</div>
+                                                </div>
+                                                <div class="col-12 col-sm">
+                                                    <div class="d-sm-none">Guarantors:</div>
+                                                    @foreach ($approval_setting->guarantors as $user)
+                                                        <span class="badge badge-primary">{{ $user->name }}</span>
+                                                    @endforeach
+                                                </div>
+                                                <div class="col-12 col-sm-1 text-right">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary border-0 rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fas fa-ellipsis-h"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a href="{{ route('approval-settings.show', $approval_setting) }}" class="dropdown-item">Detail</a>
+                                                            @can('edit-approval-settings')
+                                                                <a href="{{ route('approval-settings.edit', $approval_setting) }}" class="dropdown-item">Edit</a>
+                                                            @endcan
+                                                            @can('delete-approval-settings')
+                                                                <form action="{{ route('approval-settings.destroy', $approval_setting) }}" method="POST" onsubmit="return confirm('Are you sure want to delete?')" style="display: none">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <input type="submit" id="btn-delete-{{ $approval_setting->id }}" style="display: none" />
+                                                                </form>
+                                                                <a href="javascript:void(0)" class="dropdown-item" onclick="document.getElementById('btn-delete-{{ $approval_setting->id }}').click()">Delete</a>
+                                                            @endcan
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="page" value="{{ $collection->currentPage() }}">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <div class="container-fluid">
-                                        <div class="row p-3 border-top border-bottom d-none d-sm-flex">
-                                            <div class="col-12 col-sm">Approval Setting</div>
-                                            <div class="col-12 col-sm">Guarantors</div>
-                                            <div class="col-12 col-sm">Last Updated</div>
-                                            <div class="col-12 col-sm-2 text-right"></div>
-                                        </div>
-                                        @forelse ($collection as $resource)
-                                        <div class="row p-3 border-top border-bottom">
-                                            <div class="mb-2 col-12 col-sm">
-                                                <div class="d-sm-none">Approval Setting:</div>
-                                                <a href="{{ route('approval-settings.show', $resource->id) }}"><strong>{{ ($resource->from_amount_with_separator) }} - {{ $resource->to_amount_with_separator }}</strong></a>
                                             </div>
-                                            <div class="mb-2 col-12 col-sm">
-                                                <div class="d-sm-none">Guarantors: </div>
-                                                @foreach ($resource->guarantors as $index => $user)
-                                                    <div class="text-muted">{{ $index + 1 . '. ' . $user->name }}</div>
-                                                @endforeach
+                                        </li>
+                                    @empty
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col text-center">Not found.</div>
                                             </div>
-                                            <div class="mb-2 col-12 col-sm">
-                                                <div class="d-sm-none">Last Updated: </div>
-                                                <strong>{{ $resource->updated_at }}</strong>
-                                                <div class="text-muted">{{ $resource->updated_at->diffForHumans() }}</div>
-                                            </div>
-                                            <div class="mb-2 col-12 col-sm-2 text-right">
-                                                <div class="btn-group" role="group">
-                                                    @can('edit-approval-settings')
-                                                        <a href="{{ route('approval-settings.edit', $resource->id) }}" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Edit">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('delete-approval-settings')
-                                                        <form action="{{ route('approval-settings.destroy', $resource->id) }}" method="POST" onsubmit="return confirm('Are you sure want to delete?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-light" tooltip data-placement="bottom" title="Delete">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endcan
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @empty
-                                        <div class="row p-3 border-top border-bottom">
-                                            <div class="col text-center">Not found.</div>
-                                        </div>
-                                        @endforelse
-                                    </div>
-                                </div>
+                                        </li>
+                                    @endforelse
+                                </ul>
                                 <div class="card-footer">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <div class="text-muted my-2">{{ "Showing {$collection->firstItem()}-{$collection->lastItem()} of {$collection->total()}" }}</div>
-                                        </div>
-                                        <div class="col-auto ml-auto">
-                                            {{ $collection->links() }}
-                                        </div>
-                                    </div>
+                                    <x-paginator :paginator="$approval_settings" />
                                 </div>
                             </div>
                             <!-- /.card -->

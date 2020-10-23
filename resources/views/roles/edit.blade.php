@@ -1,26 +1,38 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Edit" :urls="['Roles' => route('roles.index'), 'Edit' => route('roles.create')]" />
+            <x-content-header name="Edit Role" :backUrl="route('roles.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
-                        <x-alert-success>{!! session()->get('alert-success') !!}</x-alert-success>
+                    @if (session()->has('success'))
+                        <x-alert-success>
+                            {{ session()->get('success') }}
+                        </x-alert-success>
+                    @endif
+                    @if (session()->has('error'))
+                        <x-alert-danger>
+                            {{ session()->get('error') }}
+                        </x-alert-danger>
                     @endif
                     @if ($errors->any())
-                        <x-alert-danger>The given data is invalid.</x-alert-danger>
+                        <x-alert-danger>
+                            The given data is invalid.
+                        </x-alert-danger>
                     @endif
                     <div class="row">
                         <div class="col-12">
-                            <form role="form" action="{{ route('roles.update', $role->id) }}" method="POST" autocomplete="off" novalidate>
+                            @can('delete-roles')
+                                <form action="{{ route('roles.destroy', $role) }}" method="POST" onsubmit="return confirm('Are you sure want to delete?')" style="display: none">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" id="btn-delete" style="display: none" />
+                                </form>
+                            @endcan
+                            <form role="form" action="{{ route('roles.update', $role) }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
                                 @method('PUT')
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                        <a href="{{ route('roles.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -37,10 +49,10 @@
                                             <legend class="col-form-label font-weight-bold">Permissions</legend>
                                             <div class="form-row">
                                                 @foreach ($permissions->chunk(4) as $chunk)
-                                                    <div class="col-sm-3 mb-3">
+                                                    <div class="col-sm-3">
                                                         @foreach ($chunk as $permission)
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" class="custom-control-input" id="permission-{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}" @if((old('permissions') && in_array($permission->id, old('permissions'))) || ($permission->checked)) checked @endif>
+                                                                <input type="checkbox" class="custom-control-input" id="permission-{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}" @if((old('permissions') && in_array($permission->id, old('permissions'))) || $role->permissions->contains('id', $permission->id)) checked @endif>
                                                                 <label class="custom-control-label font-weight-normal" for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
                                                             </div>
                                                         @endforeach
@@ -48,6 +60,16 @@
                                                 @endforeach
                                             </div>
                                         </fieldset>
+                                    </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('roles.index')" />
+                                        @can('delete-roles')
+                                            <a href="javascript:void(0)" class="btn btn-outline-danger border-0" onclick="document.getElementById('btn-delete').click()">
+                                                <i class="fas fa-trash-alt fa-fw"></i>
+                                                <span>DELETE</span>
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                             </form>

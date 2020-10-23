@@ -1,13 +1,13 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="My Profile" :urls="['My Profile' => route('profile.index')]" />
+            <x-content-header name="My Profile" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
+                    @if (session()->has('success'))
                         <x-alert-success>
-                            {!! session()->get('alert-success') !!}
+                            {!! session()->get('success') !!}
                         </x-alert-success>
                     @endif
                     @if ($errors->any())
@@ -20,11 +20,7 @@
                             <form role="form" action="{{ route('profile.update') }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
                                 @method('PUT')
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                        <a href="{{ route('profile.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -58,6 +54,16 @@
                                             <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Password Confirmation" value="{{ old('password_confirmation') }}">
                                             <small class="form-text text-muted">* Optional. Required if old password is filled.</small>
                                         </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save fa-fw"></i>
+                                            <span>SAVE</span>
+                                        </button>
+                                        <a href="{{ url('/') }}" class="btn btn-outline-primary border-0">
+                                            <i class="fas fa-undo-alt fa-fw"></i>
+                                            <span>BACK</span>
+                                        </a>
                                     </div>
                                 </div>
                             </form>

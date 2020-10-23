@@ -1,14 +1,19 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Edit" :urls="['Users' => route('users.index'), 'Edit' => route('users.create')]" />
+            <x-content-header name="Edit User" :backUrl="route('users.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
+                    @if (session()->has('success'))
                         <x-alert-success>
-                            {!! session()->get('alert-success') !!}
+                            {{ session()->get('success') }}
                         </x-alert-success>
+                    @endif
+                    @if (session()->has('error'))
+                        <x-alert-danger>
+                            {{ session()->get('error') }}
+                        </x-alert-danger>
                     @endif
                     @if ($errors->any())
                         <x-alert-danger>
@@ -17,14 +22,17 @@
                     @endif
                     <div class="row">
                         <div class="col-12">
-                            <form role="form" action="{{ route('users.update', $user->id) }}" method="POST" autocomplete="off" novalidate>
+                            @can('delete-users')
+                                <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure want to delete?')" style="display: none">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" id="btn-delete" style="display: none" />
+                                </form>
+                            @endcan
+                            <form role="form" action="{{ route('users.update', $user) }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
                                 @method('PUT')
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                        <a href="{{ route('users.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -58,13 +66,23 @@
                                                 @foreach ($roles as $role)
                                                     <div class="col-sm-3">
                                                         <div class="custom-control custom-switch">
-                                                            <input type="checkbox" class="custom-control-input" id="role-{{ $role->id }}" name="roles[]" value="{{ $role->id }}" @if((old('roles') && in_array($role->id, old('roles'))) || $role->checked) checked @endif>
+                                                            <input type="checkbox" class="custom-control-input" id="role-{{ $role->id }}" name="roles[]" value="{{ $role->id }}" @if((old('roles') && in_array($role->id, old('roles'))) || $user->roles->contains('id', $role->id)) checked @endif>
                                                             <label class="custom-control-label font-weight-normal" for="role-{{ $role->id }}">{{ $role->name }}</label>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             </div>
                                         </fieldset>
+                                    </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('users.index')" />
+                                        @can('delete-users')
+                                            <a href="javascript:void(0)" class="btn btn-outline-danger border-0" onclick="document.getElementById('btn-delete').click()">
+                                                <i class="fas fa-trash-alt fa-fw"></i>
+                                                <span>DELETE</span>
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
                             </form>

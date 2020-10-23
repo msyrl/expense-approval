@@ -1,25 +1,25 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Create" :urls="['Roles' => route('roles.index'), 'Create' => route('roles.create')]" />
+            <x-content-header name="Create Role" :backUrl="route('roles.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
-                        <x-alert-success>{!! session()->get('alert-success') !!}</x-alert-success>
+                    @if (session()->has('success'))
+                        <x-alert-success>
+                            {{ session()->get('success') }}
+                        </x-alert-success>
                     @endif
                     @if ($errors->any())
-                        <x-alert-danger>The given data is invalid.</x-alert-danger>
+                        <x-alert-danger>
+                            The given data is invalid.
+                        </x-alert-danger>
                     @endif
                     <div class="row">
                         <div class="col-12">
                             <form role="form" action="{{ route('roles.store') }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <a href="{{ route('roles.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -36,7 +36,7 @@
                                             <legend class="col-form-label font-weight-bold">Permissions</legend>
                                             <div class="form-row">
                                                 @foreach ($permissions->chunk(4) as $chunk)
-                                                    <div class="col-sm-3 mb-3">
+                                                    <div class="col-sm-3">
                                                         @foreach ($chunk as $permission)
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" class="custom-control-input" id="permission-{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}" @if(old('permissions') && in_array($permission->id, old('permissions'))) checked @endif>
@@ -47,6 +47,10 @@
                                                 @endforeach
                                             </div>
                                         </fieldset>
+                                    </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('roles.index')" />
                                     </div>
                                 </div>
                             </form>

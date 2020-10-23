@@ -1,13 +1,13 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Create" :urls="['Users' => route('users.index'), 'Create' => route('users.create')]" />
+            <x-content-header name="Create User" :backUrl="route('users.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
+                    @if (session()->has('success'))
                         <x-alert-success>
-                            {!! session()->get('alert-success') !!}
+                            {{ session()->get('success') }}
                         </x-alert-success>
                     @endif
                     @if ($errors->any())
@@ -19,11 +19,7 @@
                         <div class="col-12">
                             <form role="form" action="{{ route('users.store') }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <a href="{{ route('users.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -62,6 +58,10 @@
                                                 @endforeach
                                             </div>
                                         </fieldset>
+                                    </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('users.index')" />
                                     </div>
                                 </div>
                             </form>

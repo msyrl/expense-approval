@@ -2,17 +2,25 @@
 
 namespace App\Models;
 
+use App\Traits\HasSortables;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSortables;
 
     protected $fillable = [
         'slug',
         'name',
+    ];
+
+    protected $sortables = [
+        'name',
+        'slug',
+        'created_at',
+        'updated_at',
     ];
 
     public function setSlugAttribute($value)

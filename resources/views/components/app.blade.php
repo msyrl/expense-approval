@@ -34,8 +34,6 @@
                 </li>
             </ul>
 
-            <x-search />
-
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Messages and Notifications Here -->

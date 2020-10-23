@@ -16,29 +16,20 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-categories'), 401);
+        $this->authorize('access-categories');
 
-        $collection = Category::query();
+        $categories = Category::query();
 
         if (request()->filled('q')) {
             $q = request()->get('q');
 
-            $collection = $collection->where('name', 'LIKE', "%{$q}%");
+            $categories = $categories->where('name', 'LIKE', "%{$q}%");
         }
 
-        if (request()->filled('sort_by')) {
-            $collection = $collection->withSortables();
-        } else {
-            $collection = $collection->latest();
-        }
-
-        $collection = $collection
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $categories = $categories->getPaginate();
 
         return view('categories.index', [
-            'collection' => $collection,
+            'categories' => $categories,
             'sortables' => (new Category)->getSortables(),
         ]);
     }
@@ -50,7 +41,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-categories'), 401);
+        $this->authorize('create-categories');
 
         return view('categories.create');
     }
@@ -78,7 +69,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        abort_if(Gate::denies('access-categories'), 401);
+        $this->authorize('access-categories');
 
         return view('categories.show', [
             'category' => $category,
@@ -93,7 +84,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        abort_if(Gate::denies('edit-categories'), 401);
+        $this->authorize('edit-categories');
 
         return view('categories.edit', [
             'category' => $category
@@ -124,7 +115,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        abort_if(Gate::denies('delete-categories'), 401);
+        $this->authorize('delete-categories');
 
         $error = false;
 

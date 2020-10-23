@@ -6,7 +6,6 @@ use App\Http\Requests\ApprovalSettingStoreRequest;
 use App\Models\ApprovalSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class ApprovalSettingController extends Controller
 {
@@ -17,13 +16,12 @@ class ApprovalSettingController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-approval-settings'), 401);
+        $this->authorize('access-approval-settings');
 
-        $collection = ApprovalSetting::with(['guarantors']);
+        $approval_settings = ApprovalSetting::with(['guarantors']);
 
         if (request()->filled('q')) {
-
-            $collection = $collection->where(function ($query) {
+            $approval_settings = $approval_settings->where(function ($query) {
                 $q = request()->get('q');
 
                 return $query
@@ -32,19 +30,10 @@ class ApprovalSettingController extends Controller
             });
         }
 
-        if (request()->filled('sort_by')) {
-            $collection = $collection->withSortables();
-        } else {
-            $collection = $collection->latest();
-        }
-
-        $collection = $collection
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $approval_settings = $approval_settings->getPaginate();
 
         return view('approval-settings.index', [
-            'collection' => $collection,
+            'approval_settings' => $approval_settings,
             'sortables' => (new ApprovalSetting)->getSortables(),
         ]);
     }
@@ -56,7 +45,7 @@ class ApprovalSettingController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-approval-settings'), 401);
+        $this->authorize('create-approval-settings');
 
         return view('approval-settings.create', [
             'users' => User::orderBy('name', 'asc')->get(),
@@ -78,9 +67,9 @@ class ApprovalSettingController extends Controller
 
         $approval_setting->guarantors()->attach($request->users);
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('approval-settings.show', $approval_setting->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('approval-settings.show', $approval_setting)
+            ->with('success', 'Success created new data.');
     }
 
     /**
@@ -91,7 +80,7 @@ class ApprovalSettingController extends Controller
      */
     public function show(ApprovalSetting $approval_setting)
     {
-        abort_if(Gate::denies('access-approval-settings'), 401);
+        $this->authorize('access-approval-settings');
 
         $approval_setting->load(['guarantors']);
 
@@ -108,7 +97,7 @@ class ApprovalSettingController extends Controller
      */
     public function edit(ApprovalSetting $approval_setting)
     {
-        abort_if(Gate::denies('edit-approval-settings'), 401);
+        $this->authorize('edit-approval-settings');
 
         $approval_setting->load(['guarantors']);
 
@@ -134,9 +123,9 @@ class ApprovalSettingController extends Controller
 
         $approval_setting->guarantors()->sync($request->users);
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('approval-settings.show', $approval_setting->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('approval-settings.show', $approval_setting)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -147,13 +136,13 @@ class ApprovalSettingController extends Controller
      */
     public function destroy(ApprovalSetting $approval_setting)
     {
-        abort_if(Gate::denies('delete-approval-settings'), 401);
+        $this->authorize('delete-approval-settings');
 
         $approval_setting->guarantors()->detach();
         $approval_setting->delete();
 
-        request()->session()->flash('alert-success', 'Success deleted the data.');
-
-        return back();
+        return redirect()
+            ->route('approval-settings.index')
+            ->with('success', 'Success deleted the data.');
     }
 }

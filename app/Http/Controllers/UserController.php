@@ -7,8 +7,6 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -19,46 +17,26 @@ class UserController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-users'), 401);
-
-        $sortables = [
-            'Username A-Z' => 'username|asc',
-            'Username Z-A' => 'username|desc',
-            'Email A-Z' => 'email|asc',
-            'Email Z-A' => 'email|desc',
-            'Name A-Z' => 'name|asc',
-            'Name Z-A' => 'name|desc',
-            'Last Updated A-Z' => 'updated_at|asc',
-            'Last Updated Z-A' => 'updated_at|desc',
-        ];
+        $this->authorize('access-users');
 
         $users = User::query();
 
         if (request()->filled('q')) {
-            $q = request()->get('q');
-
             $users = $users
-                ->where('username', 'LIKE', "%{$q}%")
-                ->orWhere('email', 'LIKE', "%{$q}%")
-                ->orWhere('name', 'LIKE', "%{$q}%");
+                ->where(function ($query) {
+                    $q = request()->get('q');
+
+                    return $query->where('username', 'LIKE', "%{$q}%")
+                        ->orWhere('email', 'LIKE', "%{$q}%")
+                        ->orWhere('name', 'LIKE', "%{$q}%");
+                });
         }
 
-        if (request()->filled('sort_by')) {
-            if (in_array(request()->get('sort_by'), $sortables)) {
-                list($sort, $order) = Str::of(request()->get('sort_by'))->explode('|');
-
-                $users = $users->orderBy($sort, $order);
-            }
-        }
-
-        $users = $users
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $users = $users->getPaginate();
 
         return view('users.index', [
             'users' => $users,
-            'sortables' => $sortables,
+            'sortables' => (new User)->getSortables(),
         ]);
     }
 
@@ -69,9 +47,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-users'), 401);
+        $this->authorize('create-users');
 
-        $roles = Role::all();
+        $roles = Role::orderBy('name', 'asc')->get();
 
         return view('users.create', ['roles' => $roles]);
     }
@@ -84,20 +62,15 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        $user = new User;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->name = $request->name;
-        $user->password = $request->password;
-        $user->save();
+        $user = User::create($request->validated());
 
-        if ($request->has('roles')) {
+        if ($request->filled('roles')) {
             $user->roles()->sync($request->roles);
         }
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('users.show', $user->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('users.show', $user)
+            ->with('success', 'Success created new data.');
     }
 
     /**
@@ -108,13 +81,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        abort_if(Gate::denies('access-users'), 401);
+        $this->authorize('access-users');
 
-        $roles = Role::all();
+        $user->load(['roles']);
 
         return view('users.show', [
             'user' => $user,
-            'roles' => $roles,
         ]);
     }
 
@@ -126,17 +98,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        abort_if(Gate::denies('edit-users'), 401);
-
-        $roles = Role::all();
+        $this->authorize('edit-users');
 
         $user->load(['roles']);
 
-        $roles = $roles->map(function ($role) use ($user) {
-            $role->checked = $user->roles->contains('id', $role->id);
-
-            return $role;
-        });
+        $roles = Role::orderBy('name', 'asc')->get();
 
         return view('users.edit', [
             'user' => $user,
@@ -153,23 +119,15 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->name = $request->name;
+        $user->update($request->validated());
 
-        if ($request->filled('password')) {
-            $user->password = $request->password;
-        }
-
-        $user->save();
-
-        if ($request->has('roles')) {
+        if ($request->filled('roles')) {
             $user->roles()->sync($request->roles);
         }
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('users.show', $user->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('users.show', $user)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -180,12 +138,18 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        abort_if(Gate::denies('delete-users'), 401);
+        $this->authorize('delete-users');
+
+        if ($user->roles->count()) {
+            return back()->with('error', 'Can\'t delete non-empty data.');
+        }
 
         $user->delete();
 
-        request()->session()->flash('alert-success', 'Success deleted the data.');
-
-        return back();
+        return redirect()
+            ->route('users.index', [
+                'sort_by' => 'created_at|desc',
+            ])
+            ->with('success', 'Success deleted the data.');
     }
 }

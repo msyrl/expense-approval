@@ -17,24 +17,41 @@ trait HasSortables
                     ->join(' ');
 
                 return [
-                    "{$name} A-Z" => "{$sortable}|asc",
-                    "{$name} Z-A" => "{$sortable}|desc",
+                    (object) [
+                        'name' => "{$name} A-Z",
+                        'value' => "{$sortable}|asc",
+                    ],
+                    (object) [
+                        'name' => "{$name} Z-A",
+                        'value' => "{$sortable}|desc",
+                    ],
                 ];
             })
-            ->mapWithKeys(function ($sortable) {
-                return $sortable;
-            })
+            ->flatten(1)
             ->all();
     }
 
     public function scopeWithSortables($query)
     {
-        if (!in_array(request()->get('sort_by'), $this->getSortables())) {
-            return $query;
+        if (
+            !request()->filled('sort_by')
+            || !$this->canSort(request()->get('sort_by'))
+        ) {
+            return $query->orderBy('id', 'desc');
         }
 
         list($sort, $order) = Str::of(request()->get('sort_by'))->explode('|');
 
         return $query->orderBy($sort, $order);
+    }
+
+    public function scopeGetPaginate($query)
+    {
+        return $query->withSortables()->paginate(request()->get('per_page', 15));
+    }
+
+    private function canSort(string $value)
+    {
+        return in_array($value, array_column($this->getSortables(), 'value'));
     }
 }
