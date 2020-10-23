@@ -3,4 +3,7 @@ Refactor
 [x] Roles
 [x] Profile
 [x] Approval Setting
-[ ] Categories
+[x] Categories
+[ ] Sources
+[ ] Expenses
+[ ] Approvals

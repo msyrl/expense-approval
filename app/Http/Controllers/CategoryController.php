@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -56,9 +55,9 @@ class CategoryController extends Controller
     {
         $category = Category::create($request->validated());
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('categories.show', $category->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('categories.show', $category)
+            ->with('success', 'Success created new data.');
     }
 
     /**
@@ -102,9 +101,9 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('categories.show', $category->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('categories.show', $category)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -117,18 +116,16 @@ class CategoryController extends Controller
     {
         $this->authorize('delete-categories');
 
-        $error = false;
-
         if ($category->expenses->count()) {
-            $error = true;
-            request()->session()->flash('alert-danger', 'Can\'t delete non-empty data.');
+            return back()->with('error', 'Can\'t delete non-empty data.');
         }
 
-        if (!$error) {
-            $category->delete();
-            request()->session()->flash('alert-success', 'Success deleted the data.');
-        }
+        $category->delete();
 
-        return back();
+        return redirect()
+            ->route('categories.index', [
+                'sort_by' => 'created_at|desc',
+            ])
+            ->with('success', 'Success deleted the data.');
     }
 }

@@ -1,35 +1,31 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Create" :urls="['Categories' => route('categories.index'), 'Create' => route('categories.create')]" />
+            <x-content-header name="Create Category" :backUrl="route('categories.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
-                        <x-alert-success>
-                            {!! session()->get('alert-success') !!}
-                        </x-alert-success>
+                    @if (session()->has('success'))
+                        <x-alert-success>{{ session()->get('success') }}</x-alert-success>
                     @endif
                     @if ($errors->any())
-                        <x-alert-danger>
-                            The given data is invalid.
-                        </x-alert-danger>
+                        <x-alert-danger>The given data is invalid.</x-alert-danger>
                     @endif
                     <div class="row">
                         <div class="col-12">
                             <form role="form" action="{{ route('categories.store') }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <a href="{{ route('categories.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="name">Name <span class="text-danger">*</span></label>
                                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Name" value="{{ old('name') }}">
                                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('categories.index')" />
                                     </div>
                                 </div>
                             </form>

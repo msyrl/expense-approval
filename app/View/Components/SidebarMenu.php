@@ -47,7 +47,9 @@ class SidebarMenu extends Component
                 'permission_slug' => 'access-categories',
                 'label' => 'Categories',
                 'icon' => 'fas fa-tag',
-                'url' => route('categories.index'),
+                'url' => route('categories.index', [
+                    'sort_by' => 'created_at|desc',
+                ]),
                 'base_url' => route('categories.index'),
             ],
             (object) [
