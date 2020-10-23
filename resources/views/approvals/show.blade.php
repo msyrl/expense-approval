@@ -14,6 +14,10 @@
                                         <div class="text-muted">{{ $approval->expense->recipient }}</div>
                                     </div>
                                     <div class="mb-3">
+                                        <strong>Source</strong>
+                                        <div class="text-muted">{{ $approval->expense->source->name }}</div>
+                                    </div>
+                                    <div class="mb-3">
                                         <strong>Amount</strong>
                                         <div class="text-muted">{{ $approval->expense->amount_with_separator }}</div>
                                     </div>

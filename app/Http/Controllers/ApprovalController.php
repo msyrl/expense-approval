@@ -13,7 +13,7 @@ class ApprovalController extends Controller
     {
         abort_if(Gate::denies('access-approvals'), 401);
 
-        $collection = Approval::with(['user', 'expense', 'approval_status'])
+        $collection = Approval::with(['expense.source', 'approval_status'])
             ->where('user_id', auth()->id())
             ->latest()
             ->paginate(request()->get('per_page', 10));
@@ -27,7 +27,7 @@ class ApprovalController extends Controller
     {
         abort_if($approval->user_id != auth()->id(), 401);
 
-        $approval->load(['expense', 'approval_status']);
+        $approval->load(['expense.source', 'approval_status']);
 
         return view('approvals.show', [
             'approval' => $approval,
