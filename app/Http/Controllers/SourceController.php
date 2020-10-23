@@ -16,29 +16,20 @@ class SourceController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-sources'), 401);
+        $this->authorize('access-sources');
 
-        $collection = Source::query();
+        $sources = Source::query();
 
         if (request()->filled('q')) {
             $q = request()->get('q');
 
-            $collection = $collection->where('name', 'LIKE', "%{$q}%");
+            $sources = $sources->where('name', 'LIKE', "%{$q}%");
         }
 
-        if (request()->filled('sort_by')) {
-            $collection = $collection->withSortables();
-        } else {
-            $collection = $collection->latest();
-        }
-
-        $collection = $collection
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $sources = $sources->getPaginate();
 
         return view('sources.index', [
-            'collection' => $collection,
+            'sources' => $sources,
             'sortables' => (new Source)->getSortables(),
         ]);
     }
@@ -50,7 +41,7 @@ class SourceController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-sources'), 401);
+        $this->authorize('create-sources');
 
         return view('sources.create');
     }
@@ -65,9 +56,9 @@ class SourceController extends Controller
     {
         $source = Source::create($request->validated());
 
-        $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('sources.show', $source->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('sources.show', $source)
+            ->with('success', 'Success created new data.');
     }
 
     /**
@@ -78,7 +69,7 @@ class SourceController extends Controller
      */
     public function show(Source $source)
     {
-        abort_if(Gate::denies('access-sources'), 401);
+        $this->authorize('access-sources');
 
         return view('sources.show', [
             'source' => $source,
@@ -93,7 +84,7 @@ class SourceController extends Controller
      */
     public function edit(Source $source)
     {
-        abort_if(Gate::denies('edit-sources'), 401);
+        $this->authorize('edit-sources');
 
         return view('sources.edit', [
             'source' => $source
@@ -111,9 +102,9 @@ class SourceController extends Controller
     {
         $source->update($request->validated());
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('sources.show', $source->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('sources.show', $source)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -124,15 +115,18 @@ class SourceController extends Controller
      */
     public function destroy(Source $source)
     {
-        abort_if(Gate::denies('delete-sources'), 401);
+        $this->authorize('delete-sources');
 
-        $error = false;
-
-        if (!$error) {
-            $source->delete();
-            request()->session()->flash('alert-success', 'Success deleted the data.');
+        if ($source->expenses->count()) {
+            return back()->with('error', 'Can\'t delete non-empty data.');
         }
 
-        return back();
+        $source->delete();
+
+        return redirect()
+            ->route('sources.index', [
+                'sort_by' => 'created_at|desc',
+            ])
+            ->with('success', 'Success deleted the data.');
     }
 }
