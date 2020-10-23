@@ -11,9 +11,9 @@ class ApprovalController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access-approvals'), 401);
+        $this->authorize('access-approvals');
 
-        $collection = Approval::with(['expense.source', 'approval_status'])
+        $collection = Approval::with(['expense.source', 'expense.category', 'approval_status'])
             ->where('user_id', auth()->id())
             ->latest()
             ->paginate(request()->get('per_page', 10));
