@@ -5,5 +5,5 @@ Refactor
 [x] Approval Setting
 [x] Categories
 [x] Sources
-[ ] Expenses
+[x] Expenses
 [ ] Approvals

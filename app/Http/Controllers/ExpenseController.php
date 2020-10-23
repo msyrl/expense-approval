@@ -9,7 +9,6 @@ use App\Models\Expense;
 use App\Models\Source;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
@@ -20,12 +19,12 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        abort_if(Gate::denies('access-expenses'), 401);
+        $this->authorize('access-expenses');
 
-        $collection = Expense::with(['source','category', 'approvals.approval_status', 'approvals.user']);
+        $expenses = Expense::with(['source', 'category', 'approvals.approval_status', 'approvals.user']);
 
         if (request()->filled('q')) {
-            $collection = $collection->where(function ($query) {
+            $expenses = $expenses->where(function ($query) {
                 $q = request()->get('q');
 
                 return $query
@@ -34,19 +33,10 @@ class ExpenseController extends Controller
             });
         }
 
-        if (request()->filled('sort_by')) {
-            $collection = $collection->withSortables();
-        } else {
-            $collection = $collection->latest();
-        }
-
-        $collection = $collection
-            ->paginate(request()->get('per_page', 10))
-            ->onEachSide(1)
-            ->withQueryString();
+        $expenses = $expenses->getPaginate();
 
         return view('expenses.index', [
-            'collection' => $collection,
+            'expenses' => $expenses,
             'sortables' => (new Expense)->getSortables(),
         ]);
     }
@@ -58,7 +48,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('create-expenses'), 401);
+        $this->authorize('create-expenses');
 
         return view('expenses.create', [
             'sources' => Source::orderBy('name', 'asc')->get(),
@@ -85,10 +75,10 @@ class ExpenseController extends Controller
                 $expense->createApprovals($userIDs);
             }
 
-            $request->session()->flash('alert-success', 'Success created new data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
+            return redirect()
+                ->route('expenses.show', $expense)
+                ->with('success', 'Success created new data.');
         });
-
-        return back();
     }
 
     /**
@@ -99,7 +89,7 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense)
     {
-        abort_if(Gate::denies('access-expenses'), 401);
+        $this->authorize('access-expenses');
 
         $expense->load(['approvals.approval_status', 'approvals.user', 'source', 'category']);
 
@@ -116,7 +106,7 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        abort_if(Gate::denies('edit-expenses'), 401);
+        $this->authorize('edit-expenses');
 
         $expense->load(['source', 'category']);
 
@@ -138,9 +128,9 @@ class ExpenseController extends Controller
     {
         $expense->update($request->validated());
 
-        $request->session()->flash('alert-success', 'Success updated the data. <a href="' . route('expenses.show', $expense->id) . '">See details.</a>');
-
-        return back();
+        return redirect()
+            ->route('expenses.show', $expense)
+            ->with('success', 'Success updated the data.');
     }
 
     /**
@@ -151,20 +141,20 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        abort_if(Gate::denies('delete-expenses'), 401);
+        $this->authorize('delete-expenses');
 
         if ($expense->hasResponded()) {
-            request()->session()->flash('alert-danger', 'Can\'t delete responded data.');
-
-            return back();
+            return back()->with('error', 'Can\'t delete responded data.');
         }
 
         $expense->approvals()->delete();
 
         $expense->delete();
 
-        request()->session()->flash('alert-success', 'Success deleted the data.');
-
-        return back();
+        return redirect()
+            ->route('expenses.index', [
+                'sort_by' => 'created_at|desc',
+            ])
+            ->with('success', 'Success deleted the data.');
     }
 }

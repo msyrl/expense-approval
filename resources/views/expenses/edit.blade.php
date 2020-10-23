@@ -1,30 +1,32 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header title="Edit" :urls="['Expenses' => route('expenses.index'), 'Edit' => route('expenses.create')]" />
+            <x-content-header name="Edit Expense" :backUrl="route('expenses.index')" />
 
             <section class="content">
                 <div class="container-fluid">
-                    @if (session()->has('alert-success'))
-                        <x-alert-success>
-                            {!! session()->get('alert-success') !!}
-                        </x-alert-success>
+                    @if (session()->has('success'))
+                        <x-alert-success>{{ session()->get('success') }}</x-alert-success>
+                    @endif
+                    @if (session()->has('error'))
+                        <x-alert-danger>{{ session()->get('error') }}</x-alert-danger>
                     @endif
                     @if ($errors->any())
-                        <x-alert-danger>
-                            The given data is invalid.
-                        </x-alert-danger>
+                        <x-alert-danger>The given data is invalid.</x-alert-danger>
                     @endif
                     <div class="row">
                         <div class="col-12">
+                            @can('delete-expenses')
+                                <form action="{{ route('expenses.destroy', $expense) }}" method="POST" onsubmit="return confirm('Are you sure want to delete?')" style="display: none">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" id="btn-delete" style="display: none" />
+                                </form>
+                            @endcan
                             <form role="form" action="{{ route('expenses.update', $expense->id) }}" method="POST" autocomplete="off" novalidate>
                                 @csrf
                                 @method('PUT')
-                                <div class="card card-outline card-primary">
-                                    <div class="card-header">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                        <a href="{{ route('expenses.index') }}" class="btn btn-link">Cancel</a>
-                                    </div>
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="source_id">Source <span class="text-danger">*</span></label>
