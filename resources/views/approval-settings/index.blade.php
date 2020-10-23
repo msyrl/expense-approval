@@ -58,15 +58,15 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">From Amount:</div>
+                                                    <div class="d-sm-none text-muted">From Amount:</div>
                                                     <div>{{ $approval_setting->from_amount_with_separator }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">To Amount:</div>
+                                                    <div class="d-sm-none text-muted">To Amount:</div>
                                                     <div>{{ $approval_setting->to_amount_with_separator }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Guarantors:</div>
+                                                    <div class="d-sm-none text-muted">Guarantors:</div>
                                                     @foreach ($approval_setting->guarantors as $user)
                                                         <span class="badge badge-primary">{{ $user->name }}</span>
                                                     @endforeach

@@ -60,15 +60,15 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Name:</div>
+                                                    <div class="d-sm-none text-muted">Name:</div>
                                                     <div>{{ $source->name }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Created At:</div>
+                                                    <div class="d-sm-none text-muted">Created At:</div>
                                                     <div>{{ $source->created_at }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Created At:</div>
+                                                    <div class="d-sm-none text-muted">Created At:</div>
                                                     <div>{{ $source->created_at }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm-1 text-right">

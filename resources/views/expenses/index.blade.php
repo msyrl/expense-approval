@@ -70,23 +70,23 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Recipient:</div>
+                                                    <div class="d-sm-none text-muted">Recipient:</div>
                                                     <div>{{ $expense->recipient }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Source:</div>
+                                                    <div class="d-sm-none text-muted">Source:</div>
                                                     <div>{{ $expense->source->name }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Category:</div>
+                                                    <div class="d-sm-none text-muted">Category:</div>
                                                     <div>{{ $expense->category->name }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Amount</div>
+                                                    <div class="d-sm-none text-muted">Amount</div>
                                                     <div>{{ $expense->amount_with_separator }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm">
-                                                    <div class="d-sm-none">Approvals</div>
+                                                    <div class="d-sm-none text-muted">Approvals</div>
                                                     <div>
                                                         @foreach ($expense->approvals as $approval)
                                                             @switch($approval->approval_status->id)
@@ -130,9 +130,11 @@
                                             </div>
                                         </li>
                                     @empty
-                                    <div class="row">
-                                        <div class="col text-center">Not found.</div>
-                                    </div>
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col text-center">Not found.</div>
+                                            </div>
+                                        </li>
                                     @endforelse
                                 </ul>
                                 <div class="card-footer">
