@@ -5,6 +5,9 @@
 
             <section class="content">
                 <div class="container-fluid">
+                    @if (session()->has('error'))
+                        <x-alert-danger>{{ session()->get('error') }}</x-alert-danger>
+                    @endif
                     <div class="row">
                         <div class="col-12">
                             <div class="card">

@@ -1,7 +1,7 @@
 <x-app>
     <x-slot name="content">
         <div class="content-wrapper">
-            <x-content-header name="Create Source" :backUrl="route('categories.index')" />
+            <x-content-header name="Create Source" :backUrl="route('sources.index')" />
 
             <section class="content">
                 <div class="container-fluid">
