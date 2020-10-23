@@ -19,9 +19,13 @@
                                     </div>
                                     <div class="mb-3">
                                         <strong>Guarantors</strong>
-                                        @foreach ($approval_setting->guarantors as $index => $user)
-                                            <div class="text-muted">{{ $index + 1 . '. ' . $user->name }}</div>
-                                        @endforeach
+                                        <div class="text-muted">
+                                            @forelse ($approval_setting->guarantors as $user)
+                                                <span class="badge badge-primary">{{ $user->name }}</span>
+                                            @empty
+                                                <span>-</span>
+                                            @endforelse
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <strong>Created At</strong>
