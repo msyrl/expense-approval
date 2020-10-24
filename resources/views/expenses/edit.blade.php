@@ -64,6 +64,16 @@
                                             @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                         </div>
                                     </div>
+                                    <div class="card-footer">
+                                        <x-save-button />
+                                        <x-cancel-button :url="route('expenses.index')" />
+                                        @can('delete-expenses')
+                                            <a href="javascript:void(0)" class="btn btn-outline-danger border-0" onclick="document.getElementById('btn-delete').click()">
+                                                <i class="fas fa-trash-alt fa-fw"></i>
+                                                <span>DELETE</span>
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </div>
                             </form>
                         </div>
