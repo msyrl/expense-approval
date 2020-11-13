@@ -64,21 +64,23 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseStoreRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $expense = Expense::create($request->validated());
+        DB::beginTransaction();
 
-            $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
+        $expense = Expense::create($request->validated());
 
-            if ($approval_settings && $approval_settings->guarantors->count()) {
-                $userIDs = $approval_settings->guarantors->pluck('id')->all();
+        $approval_settings = ApprovalSetting::whereAmount($expense->amount)->first();
 
-                $expense->createApprovals($userIDs);
-            }
+        if ($approval_settings && $approval_settings->guarantors->count()) {
+            $userIDs = $approval_settings->guarantors->pluck('id')->all();
 
-            return redirect()
-                ->route('expenses.show', $expense)
-                ->with('success', 'Success created new data.');
-        });
+            $expense->createApprovals($userIDs);
+        }
+
+        DB::commit();
+
+        return redirect()
+            ->route('expenses.show', $expense)
+            ->with('success', 'Success created new data.');
     }
 
     /**
