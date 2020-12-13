@@ -63,6 +63,7 @@
                                                 <x-list-header name="Amount" asc="amount|asc" desc="amount|desc" />
                                             </div>
                                             <div class="col-12 col-sm text-muted">Approvals</div>
+                                            <div class="col-12 col-sm text-muted">Created At</div>
                                             <div class="col-12 col-sm-1 text-right"></div>
                                         </div>
                                     </li>
@@ -104,6 +105,10 @@
                                                             @endswitch
                                                         @endforeach
                                                     </div>
+                                                </div>
+                                                <div class="col-12 col-sm">
+                                                    <div class="d-sm-none text-muted">Created At</div>
+                                                    <div>{{ $expense->created_at }}</div>
                                                 </div>
                                                 <div class="col-12 col-sm-1 text-right">
                                                     <div class="dropdown">

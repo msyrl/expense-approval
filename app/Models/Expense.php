@@ -18,6 +18,7 @@ class Expense extends Model
         'recipient',
         'amount',
         'description',
+        'created_at',
     ];
 
     public function getAmountWithSeparatorAttribute()
