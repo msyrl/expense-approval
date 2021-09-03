@@ -1,11 +1,12 @@
-require('./bootstrap');
-require('admin-lte/dist/js/adminlte')
+require("./sw-registrar");
+require("./bootstrap");
+require("admin-lte/dist/js/adminlte");
 
 $(window)
-    .on('load', function () {
-        $('#page-loader').hide();
-        $('[tooltip]').tooltip();
+    .on("load", function () {
+        $("#page-loader").hide();
+        $("[tooltip]").tooltip();
     })
-    .on('beforeunload', function () {
-       $('#page-loader').show();
+    .on("beforeunload", function () {
+        $("#page-loader").show();
     });
