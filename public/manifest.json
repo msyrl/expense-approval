@@ -1,6 +1,6 @@
 {
-    "name": "Keuangan Solidaritas Insan Peduli",
-    "short_name": "Keuangan SIP",
+    "name": "Sistem Keuangan Solidaritas Insan Peduli",
+    "short_name": "SisKeu SIP",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",
