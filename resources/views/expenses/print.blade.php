@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Expense ID {{ $expense->id }}</title>
@@ -7,8 +8,10 @@
         .v-align-top {
             vertical-align: top;
         }
+
     </style>
 </head>
+
 <body>
     <table cellspacing="0" cellpadding="5" width="100%" border="1">
         <tr>
@@ -36,8 +39,7 @@
                 <strong>Recipient</strong>
             </td>
             <td>{{ $expense->recipient }}</td>
-        </tr
-        >
+        </tr>
         <tr>
             <td class="v-align-top">
                 <strong>Amount</strong>
@@ -50,6 +52,13 @@
                 <strong>Description</strong>
             </td>
             <td>{{ $expense->description ?? '-' }}</td>
+        </tr>
+
+        <tr>
+            <td class="v-align-top">
+                <strong>Created At</strong>
+            </td>
+            <td>{{ $expense->created_at->format('d F Y') }}</td>
         </tr>
 
         <tr>
@@ -83,4 +92,5 @@
         </tr>
     </table>
 </body>
+
 </html>
