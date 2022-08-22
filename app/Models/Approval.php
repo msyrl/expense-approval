@@ -47,4 +47,9 @@ class Approval extends Pivot
 
         return $this->update($data);
     }
+
+    public function getFormattedUpdatedAtAttribute()
+    {
+        return $this->updated_at->format('d F Y');
+    }
 }
